@@ -24,7 +24,7 @@ FILE *file;
 
 void fill_matrices_from_file() {
     FILE *file_loc;
-    char name[] = "Output_file_1.txt";
+    char name[] = "Output_file_k.txt";
     if ((file_loc = fopen(name, "r")) == NULL) {
         printf("file not opened");
         getchar();
@@ -101,6 +101,7 @@ void open_file() {
 void generate_begin() {
     fprintf(file, "#include <stdio.h>\n"
                   "#include <malloc.h>\n"
+                  "#include <math.h>\n"
                   "float **abc;\n"
                   "float **u;\n"
                   "struct sizes_of_matrix //\n"
@@ -182,14 +183,30 @@ void generate_functions() {
                   "    }\n"
                   "    printf(\"\\n\");\n"
                   "}\n"
-                  "\n");
+                  "\n"
+                  "int compare_1(double a, double b, double eps)\n"
+                  "{\n"
+                  "    double diff = floor(a/eps + 0.5) - floor(b/eps + 0.5);\n"
+                  "    return diff < 0 ? -1 : diff > 0 ? +1 : 0;\n"
+                  "}\n"
+                  "void new_print_2_matrix(float **a, int fir, int sec) {\n"
+                  "    int count = 0;\n"
+                  "    for (int i = 0; i < fir; i++) {\n"
+                  "        for (int j = 0; j < sec; j++) {\n"
+                  "            if(compare_1(a[i][j],0.0000f,0.0000001) != 0)\n"
+                  "                //printf(\"%%f \",a[i][j]);\n"
+                  "                count++;\n"
+                  "        }\n"
+                  "    }\n"
+                  "    printf(\"ne nol: %%d\\n\",count);\n"
+                  "}\n");
 }
 
 void generate_fill_var_in_program() {
     fprintf(file, "\n"
                   "void fill_matrices_from_file() {\n"
                   "    FILE *file_loc;\n"
-                  "    char name[] = \"Output_file_1.txt\";\n"
+                  "    char name[] = \"Output_file_k.txt\";\n"
                   "    if ((file_loc = fopen(name, \"r\")) == NULL) {\n"
                   "        printf(\"file not opened\");\n"
                   "        getchar();\n"
@@ -235,18 +252,20 @@ void generate_fill_var_in_program() {
 
 void generate_main() {
     fprintf(file, "int main() {\n"
-                  "    fill_matrices_from_file();\n"
-                  "  fill_ABC();\n"
-                  "  //  print_2_matrix(abc,sabc.first,sabc.second);\n"
-                  "    print_2_matrix(u,su.first,su.second);\n"
-                  "   // print_1_matrix(borders,size_border);\n"
-                  "  //  print_1_matrix(shifts,size_shifts);\n"
+                  "fill_matrices_from_file();\n"
+                  "    fill_ABC();\n"
+                  "    //  print_2_matrix(abc,sabc.first,sabc.second);\n"
+                  "    new_print_2_matrix(u,su.first,su.second);\n"
+                  "    //print_2_matrix(u,su.first,su.second);\n"
+                  "    // print_1_matrix(borders,size_border);\n"
+                  "    //  print_1_matrix(shifts,size_shifts);\n"
                   "// print_2_matrix(A,sx.first,sx.second);\n"
-                  "   // print_2_matrix(B,sx.first,sx.second);\n"
-                  "   // print_2_matrix(C,sx.first,sx.second);\n"
-                  "   // print_2_matrix(D,sx.first,sx.second);\n"
-                  "convolution();\n"
-                  "    print_2_matrix(u,su.first,su.second);\n"
+                  "    // print_2_matrix(B,sx.first,sx.second);\n"
+                  "    // print_2_matrix(C,sx.first,sx.second);\n"
+                  "    // print_2_matrix(D,sx.first,sx.second);\n"
+                  "    convolution();\n"
+                  "   //new_print_2_matrix(u,su.first,su.second);\n"
+                  "   print_2_matrix(u,su.first,su.second);\n"
                   "    return 0;\n"
                   "}\n"
                   "\n");
@@ -330,8 +349,8 @@ void convolution() {
 
 int main() {
     fill_matrices_from_file();
-    print_2_matrix(abc, sabc.first, sabc.second);
-    print_2_matrix(u, su.first, su.second);
+   // print_2_matrix(abc, sabc.first, sabc.second);
+   // print_2_matrix(u, su.first, su.second);
     print_1_matrix(borders, size_border);
     print_1_matrix(shifts, size_shifts);
     open_file();
